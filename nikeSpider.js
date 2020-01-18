@@ -10,9 +10,16 @@ async function spider(id) {
     json: true
   };
 
-  console.log(baseUrl);
+  // console.log(baseUrl);
 
   const [err, result] = await to(rp(options));
+
+  // result.data.products.objects[0].productInfo[0].merchPrice.discounted
+
+  // filter the discount products
+  const hh = result.data.products.objects.filter(e => {
+    e.productInfo[0].merchPrice.discounted
+  })
 
   if (err) {
     console.error(err);
@@ -20,26 +27,20 @@ async function spider(id) {
   return result;
 }
 
-const baseArry = Array(20)
+const baseArry = Array(2)
   .fill(0)
   .map((e, i) => e + 24 * i);
 baseArry.shift();
 
-spider(baseArry[0]).then(e => {
-  console.log(e);
-});
 
-// async function __main__() {
-//   // let result
-//   //   for (const e of baseArry) {
-//   const [err, spiderRest] = await spider(baseArry[0]);
-//   //   if (err) {
-//   //     return err;
-//   // }
-//   console.log(spiderRest);
-//   // filter discounted === true
-//   // return all discounted products
+async function __main__() {
+  const result = [];
+  for (const i of baseArry) {
+    const firstresult = await spider(i);
+    result.push(firstresult);
+  }
+  console.log(result);
+}
 // }
-// // }
 
-// __main__();
+__main__();
